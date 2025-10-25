@@ -16,30 +16,10 @@
         </div>
 
         <q-form @submit="onSubmit" class="q-gutter-md">
-          <q-input
-            v-model="email"
-            type="email"
-            label="Email address"
-            autocomplete="email"
-            filled dense
-            :disable="loading"
-            :rules="[v => !!v || 'Required']"
-          />
-          <q-input
-            v-model="password"
-            :type="showPwd ? 'text' : 'password'"
-            label="Password"
-            autocomplete="current-password"
-            filled dense
-            :disable="loading"
-            :rules="[v => !!v || 'Required']"
-          >
+          <q-input v-model="email" type="email" label="Email address" autocomplete="email" filled dense :disable="loading" :rules="[v => !!v || 'Required']" />
+          <q-input v-model="password" :type="showPwd ? 'text' : 'password'" label="Password" autocomplete="current-password" filled dense :disable="loading" :rules="[v => !!v || 'Required']">
             <template #append>
-              <q-icon
-                :name="showPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="showPwd = !showPwd"
-              />
+              <q-icon :name="showPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="showPwd = !showPwd" />
             </template>
           </q-input>
 
@@ -48,14 +28,7 @@
             <q-btn flat size="sm" label="Forgot Password?" class="text-grey-7" @click="goForgot" />
           </div>
 
-          <q-btn
-            label="Sign In"
-            type="submit"
-            color="primary"
-            unelevated
-            class="q-mt-sm"
-            :loading="loading"
-          />
+          <q-btn label="Sign In" type="submit" color="primary" unelevated class="q-mt-sm" :loading="loading" />
         </q-form>
 
         <div class="q-mt-lg">
@@ -66,11 +39,7 @@
 
       <div class="col-6 gt-sm gradient-pane relative-position">
         <div class="pane-content absolute-full">
-          <q-img
-            src="public/images/auth.png"
-            class="art"
-            contain
-          />
+          <q-img src="public/images/auth.png" class="art" contain />
           <div class="lock-badge">
             <q-icon name="lock" size="24px" />
           </div>
@@ -84,7 +53,7 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from 'src/store/auth.js'
+import { useAuthStore } from 'stores/auth.js'
 
 const $q = useQuasar()
 const router = useRouter()

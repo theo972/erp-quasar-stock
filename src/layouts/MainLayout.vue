@@ -25,8 +25,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { refreshApiInstance } from 'boot/axios.js'
 
 const linksList = [
   {
@@ -74,6 +75,10 @@ const linksList = [
 ]
 
 const leftDrawerOpen = ref(false)
+
+onBeforeMount(() => {
+  refreshApiInstance()
+})
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value

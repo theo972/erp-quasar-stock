@@ -1,37 +1,49 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 
-const api = axios.create({
-  baseURL: (import.meta.env.API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, ''),
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
-  }
-})
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('erp_token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
+const BASE_URL = process.env.API_BASE_URL
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error?.response?.status
-    if (status === 401) {
-      localStorage.removeItem('erp_token')
-      localStorage.removeItem('erp_user')
-      const here = window.location.hash || window.location.pathname
-      if (!/\/login$/.test(here)) {
-        window.location.href = '#/login'
-      }
+function createApiInstance () {
+  const token = localStorage.getItem('erp_token')
+  const baseURL = token ? `${BASE_URL}api` : BASE_URL
+
+  const instance = axios.create({
+    baseURL,
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
     }
-    return Promise.reject(error)
-  }
-)
+  })
+
+  instance.interceptors.request.use((config) => {
+    const token = localStorage.getItem('erp_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  })
+
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const status = error?.response?.status
+      if (status === 401) {
+        localStorage.removeItem('erp_token')
+        localStorage.removeItem('erp_user')
+        const here = window.location.hash || window.location.pathname
+        if (!/\/login$/.test(here)) {
+          window.location.href = '#/login'
+        }
+      }
+      return Promise.reject(error)
+    }
+  )
+
+  return instance
+}
+
+export const api = createApiInstance()
 
 export default defineBoot(({ app, router }) => {
   router.beforeEach((to) => {
@@ -46,4 +58,6 @@ export default defineBoot(({ app, router }) => {
   app.config.globalProperties.$api = api
 })
 
-export { api }
+export function refreshApiInstance () {
+  Object.assign(api, createApiInstance())
+}

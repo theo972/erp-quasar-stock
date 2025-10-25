@@ -1,10 +1,10 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { api } from 'boot/axios'
+import { api } from 'boot/axios.js'
 
 export const useAuthStore = defineStore('auth', () => {
   function login (credentials) {
     return new Promise((resolve, reject) => {
-      return api.post('/auth/login_check',credentials).then(({ data }) => {
+      return api.post('auth/login_check',credentials).then(({ data }) => {
         localStorage.setItem('erp_token', data.token)
         localStorage.setItem('erp_user', JSON.stringify(data.user || {}))
         resolve()

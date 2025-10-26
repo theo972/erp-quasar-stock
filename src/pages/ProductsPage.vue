@@ -60,11 +60,14 @@
 <script setup>
 import { ref, reactive, onMounted, watch} from 'vue'
 import { useQuasar, debounce } from 'quasar'
+import { useSearchStore } from 'stores/search.js'
 import { useProductsStore } from 'stores/products'
+
 import ProductDialog from 'components/products/ProductDialog.vue'
 
 const $q = useQuasar()
 const productsStore = useProductsStore()
+const searchStore = useSearchStore()
 
 const loading = ref(false)
 const deletingId = ref(null)
@@ -96,12 +99,13 @@ function money (v) {
 
 function fetchRows () {
   loading.value = true
-  productsStore.searchProduct({
+  searchStore.search({
+    support: 'product',
     page: pagination.value.page,
     perPage: pagination.value.rowsPerPage
   }).then((response) => {
-    rows.value = response.items ?? response.data ?? response.results ?? response ?? []
-    total.value = Number(response.total ?? response.count ?? rows.value.length)
+    rows.value = response.data ?? []
+    total.value = Number(response.total ?? rows.value.length)
   }).catch((error) => {
     $q.notify({ type: 'negative', message: 'Load error', caption: error?.message })
   }).finally(() => {

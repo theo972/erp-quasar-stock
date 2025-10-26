@@ -12,21 +12,6 @@ export const useProductsStore = defineStore('products', () => {
     })
   }
 
-  function searchProduct (payload) {
-    return new Promise((resolve, reject) => {
-      return api.get('products/search', {
-        params: {
-          page: payload.page,
-          perPage: payload.perPage
-        }
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error.response.data)
-      })
-    })
-  }
-
   function showProduct (payload) {
     return new Promise((resolve, reject) => {
       return api.get('products/', { params: { id: payload.id, } }).then((response) => {
@@ -69,7 +54,6 @@ export const useProductsStore = defineStore('products', () => {
 
   return {
     getDashboard,
-    searchProduct,
     showProduct,
     createProduct,
     updateProduct,

@@ -2,21 +2,6 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { api } from 'boot/axios.js'
 
 export const useSaleOrderStore = defineStore('saleOrder', () => {
-  function searchSaleOrders (payload) {
-    return new Promise((resolve, reject) => {
-      return api.get('saleOrder/search', {
-        params: {
-          page: payload.page,
-          perPage: payload.perPage
-        }
-      }).then((response) => {
-        resolve(response.data)
-      }).catch((error) => {
-        reject(error.response.data)
-      })
-    })
-  }
-
   function showSaleOrder (payload) {
     return new Promise((resolve, reject) => {
       return api.get('saleOrder/', { params: { id: payload.id, } }).then((response) => {
@@ -58,7 +43,6 @@ export const useSaleOrderStore = defineStore('saleOrder', () => {
   }
 
   return {
-    searchSaleOrders,
     showSaleOrder,
     createSaleOrder,
     updateSaleOrder,

@@ -12,9 +12,70 @@ export const useProductsStore = defineStore('products', () => {
     })
   }
 
-  return {
-    getDashboard
+  function searchProduct (payload) {
+    return new Promise((resolve, reject) => {
+      return api.get('products/search', {
+        params: {
+          page: payload.page,
+          perPage: payload.perPage
+        }
+      }).then((response) => {
+        resolve(response.data)
+      }).catch((error) => {
+        reject(error.response.data)
+      })
+    })
   }
+
+  function showProduct (payload) {
+    return new Promise((resolve, reject) => {
+      return api.get('products/', { params: { id: payload.id, } }).then((response) => {
+        resolve(response.data)
+      }).catch((error) => {
+        reject(error.response.data)
+      })
+    })
+  }
+
+  function createProduct (payload) {
+    return new Promise((resolve, reject) => {
+      return api.post('products', payload).then((response) => {
+        resolve(response.data)
+      }).catch((error) => {
+        reject(error.response.data)
+      })
+    })
+  }
+
+  function updateProduct (payload) {
+    return new Promise((resolve, reject) => {
+      return api.put('products/' + payload.id, payload).then((response) => {
+        resolve(response.data)
+      }).catch((error) => {
+        reject(error.response.data)
+      })
+    })
+  }
+
+  function deleteProduct (payload) {
+    return new Promise((resolve, reject) => {
+      return api.delete('products/' + payload.id).then((response) => {
+        resolve(response.data)
+      }).catch((error) => {
+        reject(error.response.data)
+      })
+    })
+  }
+
+  return {
+    getDashboard,
+    searchProduct,
+    showProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+  }
+
 })
 
 if (import.meta.hot) {

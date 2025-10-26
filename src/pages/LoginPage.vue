@@ -50,10 +50,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'stores/auth.js'
+import { refreshApiInstance } from 'boot/axios.js'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -64,6 +65,10 @@ const password = ref('')
 const remember = ref(true)
 const showPwd = ref(false)
 const loading = ref(false)
+
+onBeforeMount(() => {
+  refreshApiInstance()
+})
 
 onMounted(() => {
   const savedEmail = localStorage.getItem('erp_login_email')

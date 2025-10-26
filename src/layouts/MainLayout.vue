@@ -1,20 +1,44 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> Quasar App </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+  <q-layout view="hHh LpR fFf">
+    <q-header elevated class="bg-white text-dark">
+      <q-toolbar class="q-px-md">
+        <q-btn flat dense round icon="menu" @click="leftOpen = !leftOpen" />
+        <q-separator vertical inset class="q-mx-sm" />
+        <div class="text-subtitle1 text-weight-bold">ERP STOCK</div>
+        <q-space />
+        <q-btn flat round dense icon="notifications" />
+        <q-avatar size="28px" class="q-ml-sm"><img src="https://i.pravatar.cc/60?img=15"></q-avatar>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+    <q-drawer v-model="leftOpen" show-if-above side="left" bordered class="bg-grey-1">
+      <q-list padding>
+        <q-item to="/dashboard" clickable v-ripple active-class="active-link">
+          <q-item-section avatar><q-icon name="dashboard" /></q-item-section>
+          <q-item-section>Dashboard</q-item-section>
+        </q-item>
+        <q-item to="/products" clickable v-ripple active-class="active-link">
+          <q-item-section avatar><q-icon name="inventory_2" /></q-item-section>
+          <q-item-section>Products</q-item-section>
+        </q-item>
+        <q-item to="/purchases" clickable v-ripple active-class="active-link">
+          <q-item-section avatar><q-icon name="shopping_cart" /></q-item-section>
+          <q-item-section>Purchases</q-item-section>
+        </q-item>
+        <q-item to="/sales" clickable v-ripple active-class="active-link">
+          <q-item-section avatar><q-icon name="local_shipping" /></q-item-section>
+          <q-item-section>Sales</q-item-section>
+        </q-item>
+        <q-item to="/stock" clickable v-ripple active-class="active-link">
+          <q-item-section avatar><q-icon name="warehouse" /></q-item-section>
+          <q-item-section>Stock</q-item-section>
+        </q-item>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <q-separator spaced />
+        <q-item clickable v-ripple @click="logout">
+          <q-item-section avatar><q-icon name="logout" /></q-item-section>
+          <q-item-section>Logout</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -25,62 +49,25 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-import { refreshApiInstance } from 'boot/axios.js'
+import { ref, onBeforeMount } from 'vue'
+import { refreshApiInstance } from 'boot/axios'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-]
-
-const leftDrawerOpen = ref(false)
+const leftOpen = ref(true)
 
 onBeforeMount(() => {
   refreshApiInstance()
 })
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+function logout () {
+  localStorage.removeItem('erp_token')
+  localStorage.removeItem('erp_user')
+  window.location.href = '#/login'
 }
 </script>
+
+<style scoped>
+.active-link {
+  background: rgba(99,102,241,.12);
+  border-right: 3px solid #6366f1;
+}
+</style>

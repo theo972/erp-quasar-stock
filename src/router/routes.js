@@ -5,7 +5,8 @@ const routes = [
     children: [
       { path: '', redirect: '/dashboard' },
       { path: '/dashboard', component: () => import('pages/DashboardPage.vue') },
-      { path: '/products', component: () => import('pages/ProductsPage.vue') }
+      { path: '/products', component: () => import('pages/ProductsPage.vue') },
+      { path: '/saleOrder', component: () => import('pages/SaleOrdersPage.vue') },
     ],
   },
   {

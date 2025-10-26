@@ -21,9 +21,9 @@
           <q-item-section avatar><q-icon name="inventory_2" /></q-item-section>
           <q-item-section>Products</q-item-section>
         </q-item>
-        <q-item to="/purchases" clickable v-ripple active-class="active-link">
+        <q-item to="/saleOrder" clickable v-ripple active-class="active-link">
           <q-item-section avatar><q-icon name="shopping_cart" /></q-item-section>
-          <q-item-section>Purchases</q-item-section>
+          <q-item-section>Sale Order</q-item-section>
         </q-item>
         <q-item to="/sales" clickable v-ripple active-class="active-link">
           <q-item-section avatar><q-icon name="local_shipping" /></q-item-section>

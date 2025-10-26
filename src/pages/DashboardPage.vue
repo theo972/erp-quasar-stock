@@ -43,32 +43,34 @@
       <q-card class="col-12 col-md-6">
         <q-card-section>
           <div class="text-subtitle1 text-weight-medium q-mb-sm">Répartition du stock</div>
-          <div v-if="ready" class="chart-wrapper">
-            <Pie :data="chartStockData" :options="chartOptions" />
-          </div>
+          <BaseChart type="pie" :data="chartStockData" :height="280" />
         </q-card-section>
       </q-card>
 
       <q-card class="col-12 col-md-6">
         <q-card-section>
           <div class="text-subtitle1 text-weight-medium q-mb-sm">Ventes mensuelles</div>
-          <div v-if="ready" class="chart-wrapper">
-            <Bar :data="chartSalesData" :options="chartOptions" />
-          </div>
+          <BaseChart type="bar" :data="chartSalesData" :height="280" />
         </q-card-section>
       </q-card>
     </div>
 
+
     <div class="q-mt-xl">
-      <q-card flat bordered class="bg-white q-pa-md">
-        <div class="text-h6 text-weight-medium q-mb-md">Activité récente</div>
-        <div v-if="loading" class="text-center text-grey">Chargement...</div>
-        <div v-else>
-          <div class="chart-wrapper">
-            <canvas ref="chartEl"></canvas>
+      <div class="q-mt-xl">
+        <q-card flat bordered class="bg-white q-pa-md">
+          <div class="text-h6 text-weight-medium q-mb-md">Activité récente</div>
+          <div v-if="loading" class="text-center text-grey">Chargement...</div>
+          <div v-else>
+            <BaseChart
+              type="line"
+              :data="{ labels: activityLabels, datasets: activityData }"
+              :options="activityOptions"
+              :height="280"
+            />
           </div>
-        </div>
-      </q-card>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
@@ -76,15 +78,14 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
-import { Pie, Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, BarElement, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js'
 import { useProductsStore } from 'stores/products.js'
+import BaseChart from 'components/charts/BaseChart.vue'
 ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, LineElement, PointElement, CategoryScale, LinearScale)
 
 const ready = ref(false)
 const $q = useQuasar()
 const loading = ref(false)
-const chartEl = ref(null)
 const productsStore = useProductsStore()
 const stats = ref({
   productsCount: 0,
@@ -112,15 +113,22 @@ const chartSalesData = ref({
     }
   ]
 })
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { position: 'bottom', labels: { boxWidth: 14 } },
-    tooltip: { backgroundColor: '#111827', titleColor: '#fff', bodyColor: '#fff' }
+const activityLabels = ref(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'])
+const activityData = ref([
+  {
+    label: 'Activité',
+    data: [5, 12, 9, 14, 20, 17, 10],
+    borderColor: '#6366f1',
+    backgroundColor: 'rgba(99,102,241,0.2)',
+    fill: true,
+    tension: 0.3,
+    pointRadius: 4
   }
+])
+const activityOptions = {
+  plugins: { legend: { display: false } },
+  scales: { y: { beginAtZero: true } }
 }
-let activityChart = null
 
 onMounted(loadStats)
 
@@ -133,44 +141,9 @@ function loadStats () {
   }).finally(async () => {
     loading.value = false
     await nextTick()
-    renderChart()
     ready.value = true
   })
 }
-
-function renderChart () {
-  const ctx = chartEl.value?.getContext('2d')
-  if (!ctx) return
-
-  if (activityChart) {
-    activityChart.destroy()
-  }
-
-  activityChart = new ChartJS(ctx, {
-    type: 'line',
-    data: {
-      labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-      datasets: [
-        {
-          label: 'Activité',
-          data: [5, 12, 9, 14, 20, 17, 10],
-          borderColor: '#6366f1',
-          backgroundColor: 'rgba(99,102,241,0.2)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 4
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
-  })
-}
-
 </script>
 
 <style scoped>

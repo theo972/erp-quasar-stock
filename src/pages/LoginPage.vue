@@ -5,13 +5,13 @@
       <div class="col-12 col-md-6 q-pa-xl column justify-center">
         <div class="row items-center q-mb-lg">
           <div class="logo-dot q-mr-sm"></div>
-          <div class="text-subtitle1 text-weight-medium">ERP STOCK</div>
+          <div class="text-subtitle1 text-weight-medium">APP</div>
         </div>
 
         <div class="q-mb-md">
           <div class="text-h3 text-weight-bold">HELLO,<br />Welcome Back</div>
           <div class="text-body2 text-grey-7 q-mt-sm">
-            Hey, welcome back to your special erp
+            Hey, welcome back to your special app
           </div>
         </div>
 

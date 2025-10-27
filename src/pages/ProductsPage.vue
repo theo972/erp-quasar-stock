@@ -9,7 +9,7 @@
         </template>
       </q-input>
       <q-space/>
-      <q-btn color="primary" unelevated icon="add" label="New product" @click="openCreate" />
+      <q-btn color="primary" unelevated icon="add" label="New product" @click="openPopup" />
     </div>
 
     <q-card flat bordered class="bg-white shadow-1">
@@ -31,13 +31,13 @@
 
         <template #body-cell-price="props">
           <q-td :props="props" class="text-no-wrap">
-            {{ money(props.row.price) }}
+            {{ $convertCurrency(props.row.price) }}
           </q-td>
         </template>
 
         <template #body-cell-actions="props">
           <q-td :props="props">
-            <q-btn dense flat round icon="edit" @click="openEdit(props.row)" />
+            <q-btn dense flat round icon="edit" @click="openPopup(props.row)" />
             <q-btn dense flat round icon="delete" color="negative" :loading="deletingId===props.row.id" @click="confirmDelete(props.row)" />
           </q-td>
         </template>
@@ -91,11 +91,15 @@ const pagination = ref({
   sortBy: 'name',
   descending: false
 })
+const dialog = reactive({ open: false, mode: 'create', productValue: null })
+const debouncedFetch = debounce(fetchRows, 250)
 
-function money (v) {
-  if (v == null) return '-'
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(v)
-}
+onMounted(() => {
+  fetchRows()
+})
+
+watch(() => filters.search, () => debouncedFetch())
+watch(pagination, fetchRows, { deep: true })
 
 function fetchRows () {
   loading.value = true
@@ -112,15 +116,9 @@ function fetchRows () {
   loading.value = false
   })
 }
-
-function openCreate () {
-  dialog.mode = 'create'
-  dialog.productValue = null
-  dialog.open = true
-}
-function openEdit (row) {
-  dialog.mode = 'edit'
-  dialog.productValue = { ...row }
+function openPopup (product = null) {
+  dialog.mode = product === null ? 'create' : 'edit'
+  dialog.productValue = product === null ? null : product
   dialog.open = true
 }
 function handleSave (payload) {
@@ -160,17 +158,6 @@ function confirmDelete (row) {
     })
   })
 }
-
-const dialog = reactive({ open: false, mode: 'create', productValue: null })
-
-const debouncedFetch = debounce(fetchRows, 250)
-
-onMounted(() => {
-  fetchRows()
-})
-
-watch(() => filters.search, () => debouncedFetch())
-watch(pagination, fetchRows, { deep: true })
 </script>
 
 <style scoped>

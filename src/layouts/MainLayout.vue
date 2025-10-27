@@ -4,7 +4,7 @@
       <q-toolbar class="q-px-md">
         <q-btn flat dense round icon="menu" @click="leftOpen = !leftOpen" />
         <q-separator vertical inset class="q-mx-sm" />
-        <div class="text-subtitle1 text-weight-bold">ERP STOCK</div>
+        <div class="text-subtitle1 text-weight-bold">APP</div>
         <q-space />
         <q-btn flat round dense icon="notifications" />
         <q-avatar size="28px" class="q-ml-sm"><img src="https://i.pravatar.cc/60?img=15"></q-avatar>

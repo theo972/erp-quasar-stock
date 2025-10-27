@@ -11,7 +11,7 @@
 
       <q-card-section>
         <q-form ref="formRef" @submit.prevent="onSubmit" class="q-gutter-md">
-          <div class="row q-col-gutter-md">
+          <div class="row q-col-gutter-md q-pa-lg">
             <q-input class="col-12 col-sm-6" v-model="form.name" label="Order name" dense :rules="[v => !!String(v).trim() || 'Required']" />
             <q-select class="col-12 col-sm-6" v-model="form.status" :options="statusOptions" map-options emit-value dense label="Status" :rules="[v => !!v || 'Required']" />
             <q-input class="col-12" v-model="form.description" label="Description" type="textarea" autogrow dense />
@@ -33,7 +33,6 @@
                 <th style="width: 4%"></th>
               </tr>
               </thead>
-
               <tbody>
               <tr v-for="(item, id) in form.items" :key="id">
                 <td>
@@ -203,19 +202,16 @@ async function onSubmit () {
   }
 
   saving.value = true
-  try {
-    emit('save', {
-      name: form.name,
-      description: form.description || null,
-      status: form.status,
-      items: form.items.map(item => ({
-        id: Number(item.productId),
-        price: Number(item.price),
-        quantity: Number(item.quantity)
-      }))
-    })
-  } finally {
-    saving.value = false
-  }
+  emit('save', {
+    name: form.name,
+    description: form.description || null,
+    status: form.status,
+    items: form.items.map(item => ({
+      id: Number(item.productId),
+      price: Number(item.price),
+      quantity: Number(item.quantity)
+    }))
+  })
+  saving.value = false
 }
 </script>

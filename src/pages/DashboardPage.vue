@@ -78,10 +78,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, BarElement, LineElement, PointElement, CategoryScale, LinearScale } from 'chart.js'
 import { useProductsStore } from 'stores/products.js'
 import BaseChart from 'components/charts/BaseChart.vue'
-ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, LineElement, PointElement, CategoryScale, LinearScale)
 
 const ready = ref(false)
 const $q = useQuasar()

@@ -11,7 +11,7 @@
       </q-input>
 
       <q-space/>
-      <q-btn color="primary" unelevated icon="add" label="New order" @click="openCreate" />
+      <q-btn color="primary" unelevated icon="add" label="New order" @click="openPopup" />
     </div>
 
     <q-card flat bordered class="bg-white shadow-1">
@@ -45,7 +45,7 @@
 
         <template #body-cell-actions="props">
           <q-td :props="props">
-            <q-btn dense flat round icon="edit" @click="openEdit(props.row)" />
+            <q-btn dense flat round icon="edit" @click="openPopup(props.row)" />
             <q-btn dense flat round icon="delete" color="negative" :loading="deletingId === props.row.id" @click="confirmDelete(props.row)" />
           </q-td>
         </template>
@@ -137,14 +137,9 @@ function fetchRows () {
     loading.value = false
   })
 }
-function openCreate () {
-  dialog.mode = 'create'
-  dialog.saleOrderValue = null
-  dialog.open = true
-}
-function openEdit (row) {
-  dialog.mode = 'edit'
-  dialog.saleOrderValue = { ...row }
+function openPopup (saleOrder = null) {
+  dialog.mode = saleOrder === null ? 'create' : 'edit'
+  dialog.saleOrderValue = saleOrder === null ? null : saleOrder
   dialog.open = true
 }
 function handleSave (payload) {
